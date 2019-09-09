@@ -1,46 +1,83 @@
-import {execute, makePromise} from 'apollo-link';
-import {HttpLink} from 'apollo-link-http';
-
+// import React from "react";
+//
+// import ApolloClient, { InMemoryCache } from "apollo-boost";
+// import { ApolloProvider } from "@apollo/react-hooks";
+//
+// import { gql } from "apollo-boost";
+// import { useQuery } from "@apollo/react-hooks";
+//
+// const cache = new InMemoryCache();
+// const client = new ApolloClient({
+//     uri: "https://72.dreamcode.xyz/dreyar/232/graphql",
+//     cache,
+// });
+//
+//
+// const GET_DOGS = gql`
+//     {
+//         cmsPage(id: 1) {
+//             url_key
+//             title
+//             content
+//             content_heading
+//             page_layout
+//             meta_title
+//             meta_description
+//             meta_keywords
+//         }
+//     }
+// `;
+//
+// const CmsBlocks = function() {
+//     const { loading, error, data, client } = useQuery(GET_DOGS);
+//
+//     console.log(data);
+//
+//     return null;
+// }
+//
+//
+// const App = () => (
+//     <ApolloProvider client={client}>
+//         <CmsBlocks />
+//     </ApolloProvider>
+// );
+//
+// export default App;
+import { ApolloClient } from 'apollo-client';
+import { InMemoryCache } from 'apollo-cache-inmemory';
+import { HttpLink } from 'apollo-link-http';
 import gql from "graphql-tag";
 
-const uri = 'https://countries.trevorblades.com/';
-const link = new HttpLink({uri});
+const cache = new InMemoryCache();
+const link = new HttpLink({
+    uri: 'https://72.dreamcode.xyz/dreyar/232/graphql/'
+})
 
-const QUERY = gql`
-    query {
-        countries {
-            name
-            code
+const client = new ApolloClient({
+    cache,
+    link
+})
+
+client
+.query({
+    query: gql`
+        {
+            cmsPage(id: 1) {
+                url_key
+                title
+                content
+                content_heading
+                page_layout
+                meta_title
+                meta_description
+                meta_keywords
+            }
         }
-    }
-`;
-
-const operation = {
-    query: QUERY,
-    variables: {}, //optional
-    operationName: null, //optional
-    context: {
-        headers: {
-            authorization: "asdasdasdasdasd"
-        }
-    }, //optional
-    extensions: {} //optional
-};
-
-
-function App() {
-    // execute returns an Observable so it can be subscribed to
-    execute(link, operation).subscribe({
-        next: data => console.log(`received data: ${JSON.stringify(data, null, 2)}`),
-        error: error => console.log(`received error ${error}`),
-        complete: () => console.log(`complete`),
-    });
-
-    // For single execution operations, a Promise can be used
-    makePromise(execute(link, operation))
-        .then(data => console.log(`received data ${JSON.stringify(data, null, 2)}`))
-        .catch(error => console.log(`received error ${error}`));
-    return null;
-}
-
+    `
+})
+.then(result => console.log(result));
+const App = () => (
+    ''
+)
 export default App;
